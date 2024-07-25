@@ -2,17 +2,17 @@
 from flask import app, request, make_response
 from flask_restful import Resource
 from config import app, db, api
-from models import Trip, Destination
+from models import Trip, Destination, User
 
 import ipdb
 
 @app.route('/trips', methods=["GET"])
 def all_trips():
     trips = Trip.query.all()
-    trip_list = [trip.to_dict() for trip in trips]
+    trip_list = [trip.to_dict(rules=('-destinations',)) for trip in trips]
     return make_response(trip_list)
 
-@app.route('/trips/<int:id>', methods=['PATCH', 'DELETE'])
+@app.route('/trips/<int:id>', methods=['GET', 'PATCH', 'DELETE'])
 def trip_by_id(id):
     trip = Trip.query.get(id)
     if request.method == 'PATCH':
@@ -29,6 +29,8 @@ def trip_by_id(id):
         db.session.commit()
 
         return make_response('', 204)
+    elif request.method == 'GET':
+        return make_response(trip.to_dict())
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
