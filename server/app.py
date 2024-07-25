@@ -2,7 +2,7 @@
 from flask import app, request, make_response
 from flask_restful import Resource
 from config import app, db, api
-from models import Trip
+from models import Trip, Destination
 
 import ipdb
 
