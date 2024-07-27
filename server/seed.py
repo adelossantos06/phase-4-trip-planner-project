@@ -7,7 +7,7 @@ from random import randint, choice as rc
 from faker import Faker
 
 # Local imports
-from models import Trip, Destination, User
+from models import Trip, Destination, User, FavoriteDestination
 from config import db, app
 
 if __name__ == '__main__':
@@ -19,6 +19,7 @@ if __name__ == '__main__':
         Trip.query.delete()
         Destination.query.delete()
         User.query.delete()
+        FavoriteDestination.query.delete()
 
         u1 = User(username="Alyssa")
         u2 = User(username="Jimmy")
@@ -38,6 +39,15 @@ if __name__ == '__main__':
 
         db.session.add_all([d1, d2, d3])
         db.session.commit()
+
+        f1 = FavoriteDestination(user_id=u1.id, destination_id=d2.id, is_favorite=True)
+        f2 = FavoriteDestination(user_id=u2.id, destination_id=d3.id, is_favorite=True)
+       
+
+        db.session.add_all([f1, f2])
+        db.session.commit()
+
+       
         
         
 
