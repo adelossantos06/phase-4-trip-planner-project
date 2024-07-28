@@ -4,14 +4,14 @@
 from random import randint, choice as rc
 
 # Remote library imports
-from faker import Faker
+
 
 # Local imports
-from models import Trip, Destination, User, FavoriteDestination
+from models import Trip, Destination, User, FavoriteDestination, Activity
 from config import db, app
 
 if __name__ == '__main__':
-    fake = Faker()
+   
     with app.app_context():
         print("Starting seed...")
         # Seed code goes here!
@@ -20,9 +20,10 @@ if __name__ == '__main__':
         Destination.query.delete()
         User.query.delete()
         FavoriteDestination.query.delete()
+        Activity.query.delete()
 
-        u1 = User(username="Alyssa")
-        u2 = User(username="Jimmy")
+        u1 = User(username="Alyssa", age=32)
+        u2 = User(username="Jimmy", age=35)
 
         db.session.add_all([u1, u2])
         db.session.commit()
@@ -42,10 +43,18 @@ if __name__ == '__main__':
 
         f1 = FavoriteDestination(user_id=u1.id, destination_id=d2.id, is_favorite=True)
         f2 = FavoriteDestination(user_id=u2.id, destination_id=d3.id, is_favorite=True)
-       
 
         db.session.add_all([f1, f2])
         db.session.commit()
+
+        a1 = Activity(name="The Alamo", description="Mueseum and site of Battle of the Alamo", trip_id=t1.id, destination_id=d1.id)
+
+        db.session.add_all([a1])
+        db.session.commit()
+
+
+
+        
 
        
         

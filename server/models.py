@@ -1,6 +1,8 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.orm import validates
 from config import db
+
 
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
@@ -9,67 +11,117 @@ class User(db.Model, SerializerMixin):
 
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String)
+    username = db.Column(db.String, unique=True, nullable=False)
+    age = db.Column(db.Integer)
+
+    __table_args__ = (
+        db.CheckConstraint('age > 15', name='check_age'),
+    )
 
     trips = db.relationship('Trip', back_populates='user')
     favoriteDestinations = db.relationship('FavoriteDestination', back_populates='user')
 
+    
+    @validates('username')
+    def validate_username(self, key, new_username):
+        if len(new_username) < 2:
+            raise ValueError('Username must be greater than 2 characters')
+        return new_username
+
 class Trip(db.Model, SerializerMixin):
     __tablename__ = 'trips'
 
-    serialize_rules = ('-destinations.trip', '-user.trips', '-destinations', '-user.favoriteDestinations', '-activities.trip')
+    serialize_rules = ('-user.trips', '-destinations.trip', '-activities.trip')
+
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String)
+    title = db.Column(db.String, nullable=False)
     description = db.Column(db.String)
     start_date = db.Column(db.String)
     end_date = db.Column(db.String)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     destinations = db.relationship('Destination', back_populates='trip', cascade='all, delete-orphan')
     user = db.relationship('User', back_populates='trips')
     activities = db.relationship('Activity', back_populates='trip', cascade='all, delete-orphan')
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'start_date': self.start_date,
+            'end_date': self.end_date,
+            'user_id': self.user_id
+        }
+
 class Destination(db.Model, SerializerMixin):
     __tablename__ = 'destinations'
 
-    serialize_rules = ('-trip.destinations', '-trip', '-favoriteDestinations.destination', '-favoriteDestinations', '-activities.destination')
+    serialize_rules = ('-trip.destinations', '-favoriteDestinations.destination')
 
     id = db.Column(db.Integer, primary_key=True)
-    city = db.Column(db.String)
+    city = db.Column(db.String, nullable=False)
     state = db.Column(db.String)
     country = db.Column(db.String)
     time_zone = db.Column(db.String)
-    trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'))
+    trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
 
     trip = db.relationship('Trip', back_populates='destinations')
     favoriteDestinations = db.relationship('FavoriteDestination', back_populates='destination')
     activities = db.relationship('Activity', back_populates='destination', cascade='all, delete-orphan')
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'city': self.city,
+            'state': self.state,
+            'country': self.country,
+            'time_zone': self.time_zone,
+            'trip_id': self.trip_id
+        }
+
 
 class FavoriteDestination(db.Model, SerializerMixin):
     __tablename__ = 'favoriteDestinations'
 
-    serialize_rules = ('-user.favoriteDestinations', '-destination.favoriteDestinations', '-user.trips', '-destination.trip', 'user_id', 'destination_id', 'is_favorite')
+    serialize_rules = ('-user.favoriteDestinations', '-destination.favoriteDestinations')
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    destination_id = db.Column(db.Integer, db.ForeignKey('destinations.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    destination_id = db.Column(db.Integer, db.ForeignKey('destinations.id'), nullable=False)
     is_favorite = db.Column(db.Boolean, default=False)
 
     user = db.relationship('User', back_populates='favoriteDestinations')
     destination = db.relationship('Destination', back_populates='favoriteDestinations')
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'destination_id': self.destination_id,
+            'is_favorite': self.is_favorite
+        }
+
 class Activity(db.Model, SerializerMixin):
     __tablename__ = 'activities'
 
-    serialize_rules = ('-destination.activities)',)
+    serialize_rules = ('-trip.activities', '-destination.activities')
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
+    name = db.Column(db.String,nullable=False)
     description = db.Column(db.String)
-    trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'))
-    destination_id = db.Column(db.Integer, db.ForeignKey('destinations.id'))
+    trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
+    destination_id = db.Column(db.Integer, db.ForeignKey('destinations.id'), nullable=False)
 
     trip = db.relationship('Trip', back_populates='activities')
     destination = db.relationship('Destination', back_populates='activities')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'trip_id': self.trip_id,
+            'destination_id':self.destination_id
+        }
