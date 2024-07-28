@@ -7,7 +7,7 @@ from random import randint, choice as rc
 
 
 # Local imports
-from models import Trip, Destination, User, Activity
+from models import Trip, Destination, User, Activity, UserDestinationAssociation
 from config import db, app
 
 if __name__ == '__main__':
@@ -21,8 +21,8 @@ if __name__ == '__main__':
         User.query.delete()
         Activity.query.delete()
 
-        u1 = User(username="Alyssa", age=32)
-        u2 = User(username="Jimmy", age=35)
+        u1 = User(username="Alyssa", age=32, _password_hash="password")
+        u2 = User(username="Jimmy", age=35, _password_hash="password123")
 
         db.session.add_all([u1, u2])
         db.session.commit()
@@ -43,6 +43,14 @@ if __name__ == '__main__':
         a1 = Activity(name="The Alamo", description="Mueseum and site of Battle of the Alamo", trip_id=t1.id, destination_id=d1.id)
 
         db.session.add_all([a1])
+        db.session.commit()
+
+        association1 = UserDestinationAssociation(user=u1, destination=d1)
+        association2 = UserDestinationAssociation(user=u1, destination=d2)
+        association3 = UserDestinationAssociation(user=u2, destination=d1)
+
+        # Add associations to the session
+        db.session.add_all([association1, association2, association3])
         db.session.commit()
 
 

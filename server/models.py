@@ -1,7 +1,7 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import validates
-from config import db
+from config import db, bcrypt
 
 
 class User(db.Model, SerializerMixin):
@@ -12,7 +12,8 @@ class User(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
-    age = db.Column(db.Integer)
+    age = db.Column(db.Integer, nullable=False)
+    _password_hash = db.Column(db.String, nullable=False)
 
     __table_args__ = (
         db.CheckConstraint('age > 15', name='check_age'),
@@ -23,6 +24,16 @@ class User(db.Model, SerializerMixin):
     destination_associations = db.relationship('UserDestinationAssociation', back_populates='user')
     destinations = association_proxy('destination_associations', 'destination')
 
+    @property
+    def password_hash(self):
+        return self._password_hash
+
+    @password_hash.setter
+    def password_hash(self, password):
+        byte_object = password.encode('utf-8')
+        bcrypt_hash = bcrypt.generate_password_hash(byte_object)
+        hash_object_as_string = bcrypt_hash.decode('utf-8')
+        self._password_hash = hash_object_as_string
     
     @validates('username')
     def validate_username(self, key, new_username):
