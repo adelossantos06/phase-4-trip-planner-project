@@ -7,7 +7,7 @@ from config import db, bcrypt
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
-    serialize_rules = ('-trips.user', '-favoriteDestinations.user', '-trips', '-favoriteDestinations.destination.favoriteDestinations')
+    serialize_rules = ('-trips.user', '-trips', '-_password_hash')
 
 
     id = db.Column(db.Integer, primary_key=True)
@@ -34,7 +34,10 @@ class User(db.Model, SerializerMixin):
         bcrypt_hash = bcrypt.generate_password_hash(byte_object)
         hash_object_as_string = bcrypt_hash.decode('utf-8')
         self._password_hash = hash_object_as_string
-    
+
+    def authenticate(self, password):
+        return bcrypt.check_password_hash(self.password_hash, password.encode('utf-8'))
+
     @validates('username')
     def validate_username(self, key, new_username):
         if len(new_username) < 2:
@@ -71,7 +74,7 @@ class Trip(db.Model, SerializerMixin):
 class Destination(db.Model, SerializerMixin):
     __tablename__ = 'destinations'
 
-    serialize_rules = ('-trip.destinations', '-favoriteDestinations.destination')
+    serialize_rules = ('-trip.destinations',)
 
     id = db.Column(db.Integer, primary_key=True)
     city = db.Column(db.String, nullable=False)

@@ -1,5 +1,5 @@
 
-from flask import Flask, request, make_response
+from flask import Flask, request, make_response, session
 from sqlalchemy.exc import IntegrityError
 from flask_restful import Resource
 from config import app, db, api
@@ -131,9 +131,10 @@ class Users(Resource):
         request_body = request.json
         try:
             user = User(username=request_body["username"], age=request_body['age'])
-
+            user.password_hash = request_body['password']
             db.session.add(user)
             db.session.commit()
+            session['user_id'] = user.id
         except IntegrityError as i_error:
             if 'UNIQUE constraint failed: users.username' in str(i_error.orig):
                 return make_response({'error': 'Username must be unique'}, 422)
@@ -147,6 +148,44 @@ class Users(Resource):
         return make_response(user.to_dict(), 201)
 
 api.add_resource(Users, '/users')
+
+class Login(Resource):
+    def post(self):
+        data = request.json
+        user = User.query.filter_by(username=data['username']).first()
+        
+        if not user:
+            return make_response({'error': 'Invalid username'}, 404)
+        
+        if bcrypt.check_password_hash(user.password_hash, data['password']):
+            session['user_id'] = user.id
+            return make_response(user.to_dict(), 200)
+        else:
+            return make_response({'error': 'Invalid username or password'}, 401)
+
+api.add_resource(Login, '/login')
+
+class Authorized(Resource):
+    def get(self):
+        user_id = session.get('user_id')
+        if user_id:
+            user = User.query.filter_by(id=user_id).first()
+            if user:
+                return make_response(user.to_dict(), 200)
+            else:
+                return make_response({'error': 'User not found'}, 404)
+        else:
+            return make_response({'error': 'Unauthorized'}, 401)
+
+api.add_resource(Authorized, '/authorized')
+
+class Logout(Resource):
+    def delete(self):
+        session['user_id'] = None
+        return make_response({}, 204)
+
+api.add_resource(Logout, '/logout')
+
 
 
 if __name__ == '__main__':

@@ -38,3 +38,5 @@ api = Api(app)
 CORS(app)
 
 bcrypt = Bcrypt(app)
+
+app.secret_key = b'\xe5\xbf\xf4(\x13\xf97\x16\x02\xadf7\x0c\xd4\x9c\x8f'
