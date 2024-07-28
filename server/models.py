@@ -19,7 +19,9 @@ class User(db.Model, SerializerMixin):
     )
 
     trips = db.relationship('Trip', back_populates='user')
-    favoriteDestinations = db.relationship('FavoriteDestination', back_populates='user')
+
+    destination_associations = db.relationship('UserDestinationAssociation', back_populates='user')
+    destinations = association_proxy('destination_associations', 'destination')
 
     
     @validates('username')
@@ -68,8 +70,10 @@ class Destination(db.Model, SerializerMixin):
     trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
 
     trip = db.relationship('Trip', back_populates='destinations')
-    favoriteDestinations = db.relationship('FavoriteDestination', back_populates='destination')
     activities = db.relationship('Activity', back_populates='destination', cascade='all, delete-orphan')
+
+    user_associations = db.relationship('UserDestinationAssociation', back_populates='destination')
+    users = association_proxy('user_associations', 'user')
 
     def to_dict(self):
         return {
@@ -81,27 +85,13 @@ class Destination(db.Model, SerializerMixin):
             'trip_id': self.trip_id
         }
 
+class UserDestinationAssociation(db.Model):
+    __tablename__ = 'user_destination_association'
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    destination_id = db.Column(db.Integer, db.ForeignKey('destinations.id'), primary_key=True)
 
-class FavoriteDestination(db.Model, SerializerMixin):
-    __tablename__ = 'favoriteDestinations'
-
-    serialize_rules = ('-user.favoriteDestinations', '-destination.favoriteDestinations')
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    destination_id = db.Column(db.Integer, db.ForeignKey('destinations.id'), nullable=False)
-    is_favorite = db.Column(db.Boolean, default=False)
-
-    user = db.relationship('User', back_populates='favoriteDestinations')
-    destination = db.relationship('Destination', back_populates='favoriteDestinations')
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'user_id': self.user_id,
-            'destination_id': self.destination_id,
-            'is_favorite': self.is_favorite
-        }
+    user = db.relationship("User", back_populates="destination_associations")
+    destination = db.relationship("Destination", back_populates="user_associations")
 
 class Activity(db.Model, SerializerMixin):
     __tablename__ = 'activities'

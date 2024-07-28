@@ -1,26 +1,25 @@
 
-from flask import app, request, make_response
+from flask import Flask, request, make_response
 from sqlalchemy.exc import IntegrityError
 from flask_restful import Resource
 from config import app, db, api
-from models import Trip, Destination, User, Activity, FavoriteDestination
-
+from models import Trip, Destination, User, Activity
 
 class Trips(Resource):
     def get(self):
         trips = Trip.query.all()
         trip_list = [trip.to_dict() for trip in trips]
-        return make_response(trip_list)
+        return make_response(trip_list, 200)
     
     def post(self):
         data = request.json
-        title = data.get('title'),
-        description = data.get('description'),
-        start_date = data.get('start_date'),
-        end_date = data.get('end_date'),
+        title = data.get('title')
+        description = data.get('description')
+        start_date = data.get('start_date')
+        end_date = data.get('end_date')
         user_id = data.get('user_id')
 
-        if not title or user_id:
+        if not title or not user_id:
             return make_response({'error': 'Title and User ID are required'}, 400)
 
         new_trip = Trip(
@@ -43,13 +42,13 @@ class TripResource(Resource):
     def get(self, id):
         trip = Trip.query.get(id)
         if not trip:
-            return ({'error': 'Trip not found'}, 404)
+            return make_response({'error': 'Trip not found'}, 404)
         return make_response(trip.to_dict(), 200)
 
     def patch(self, id):
         trip = Trip.query.get(id)
         if not trip:
-            return ({'error': 'Trip not found'}, 404)
+            return make_response({'error': 'Trip not found'}, 404)
 
         params = request.json
         for attr, value in params.items():
@@ -61,7 +60,7 @@ class TripResource(Resource):
     def delete(self, id):
         trip = Trip.query.get(id)
         if not trip:
-            return ({'error': 'Trip not found'}, 404)
+            return make_response({'error': 'Trip not found'}, 404)
 
         db.session.delete(trip)
         db.session.commit()
@@ -80,53 +79,6 @@ class UserTripResource(Resource):
         return make_response(trips, 200)
 
 api.add_resource(UserTripResource, '/users/<int:user_id>/trips')    
-
-
-class UserFavoritesResource(Resource):
-    def get(self, user_id):
-        user = User.query.get(user_id)
-        if not user:
-            return make_response({'error': 'User not found'}, 404)
-
-        favorite_destinaitons = [
-            fav.destination.to_dict() for fav in user.favoriteDestinations
-        ]
-        return make_response(favorite_destinaitons, 200)
-
-    def post(self, user_id):
-        user = User.query.get(user_id)
-        if not user:
-            return make_response({'error': 'User not found'}, 404)
-
-        params = request.json
-        destination_id = params.get('destination_id')
-
-        if not destination_id:
-            return make_response({'error': 'Destination ID is required'}, 400)
-
-        exisitng_favorite = FavoriteDestination.query.filter_by(user_id=user_id, destination_id=destination_id).first()
-        if exisitng_favorite:
-            return make_response({'error': 'Favorite already exists'}, 409)
-        
-        favorite = FavoriteDestination(user_id=user_id, destination_id=destination_id, is_favorite=True)
-        db.session.add(favorite)
-        db.session.commit()
-
-        return make_response(favorite.to_dict())
-
-api.add_resource(UserFavoritesResource, '/users/<int:user_id>/favorites')
-
-class RemoveFavoriteDestination(Resource):
-    def delete(self, user_id, destination_id):
-        favorite = FavoriteDestination.query.filter_by(user_id=user_id, destination_id=destination_id).first()
-        if not favorite:
-            return make_response({'error': 'Favorite destination not found'}, 404)
-
-        db.session.delete(favorite)
-        db.session.commit()
-        return make_response('', 204)
-
-api.add_resource(RemoveFavoriteDestination, '/users/<int:user_id>/favorites/<int:destination_id>')
 
 
 class ActivitiesByDestination(Resource):
@@ -175,7 +127,7 @@ class ActivityResource(Resource):
 api.add_resource(ActivityResource, '/activities/<int:id>')
 
 class Users(Resource):
-     def post(self):
+    def post(self):
         request_body = request.json
         try:
             user = User(username=request_body["username"], age=request_body['age'])

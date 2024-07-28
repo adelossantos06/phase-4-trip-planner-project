@@ -7,7 +7,7 @@ from random import randint, choice as rc
 
 
 # Local imports
-from models import Trip, Destination, User, FavoriteDestination, Activity
+from models import Trip, Destination, User, Activity
 from config import db, app
 
 if __name__ == '__main__':
@@ -19,7 +19,6 @@ if __name__ == '__main__':
         Trip.query.delete()
         Destination.query.delete()
         User.query.delete()
-        FavoriteDestination.query.delete()
         Activity.query.delete()
 
         u1 = User(username="Alyssa", age=32)
@@ -39,12 +38,6 @@ if __name__ == '__main__':
         d3 = Destination(city="Seattle", state="Washington", country="United States", time_zone="Pacific", trip_id=t2.id)
 
         db.session.add_all([d1, d2, d3])
-        db.session.commit()
-
-        f1 = FavoriteDestination(user_id=u1.id, destination_id=d2.id, is_favorite=True)
-        f2 = FavoriteDestination(user_id=u2.id, destination_id=d3.id, is_favorite=True)
-
-        db.session.add_all([f1, f2])
         db.session.commit()
 
         a1 = Activity(name="The Alamo", description="Mueseum and site of Battle of the Alamo", trip_id=t1.id, destination_id=d1.id)
