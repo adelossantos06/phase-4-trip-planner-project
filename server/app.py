@@ -83,7 +83,43 @@ class UserTripResource(Resource):
         trips = [trip.to_dict() for trip in user.trips]
         return make_response(trips, 200)
 
-api.add_resource(UserTripResource, '/users/<int:user_id>/trips')    
+api.add_resource(UserTripResource, '/users/<int:user_id>/trips')  
+
+class DestinationsByTrip(Resource):
+    def get(self, trip_id):
+        trip = Trip.query.get(trip_id)
+        if not trip:
+            return make_response({'error' : 'Trip not found'}, 404)
+
+        destinations = [destination.to_dict() for destination in trip.destinations]
+        return make_response(destinaitons, 200)
+
+    def post(self, trip_id):
+        trip = Trip.query.get(trip_id)
+        if not trip:
+            return make_response({'error' : 'Trip not found'}, 404)
+
+        data = request.json
+        city = data.get('city')
+        state = data.get('state')
+        country = data.get('country')
+        time_zone = data.get('time_zone')
+
+        new_destination = Destination(
+            city=city,
+            state=state,
+            country=country,
+            time_zone=time_zone,
+            trip_id=trip_id
+        )
+
+        db.session.add(new_destination)
+        db.session.commit()
+
+        return make_response(new_destination.to_dict(), 201)
+
+api.add_resource(DestinationsByTrip, '/trips/<int:id>/destinations')
+
 
 
 class ActivitiesByDestination(Resource):
