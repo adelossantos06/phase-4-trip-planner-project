@@ -7,6 +7,7 @@ import Navbar from "./Navbar";
 import Trips from "./Trips";
 import TripContainer from "./TripContainer";
 import CreateTrip from "./CreateTrip";
+import EditTrip from "./EditTrip";
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -41,6 +42,10 @@ function App() {
           element={loggedInUser ? <TripContainer /> : <Navigate to="/login" />}
         >
           <Route path="create" element={<CreateTrip />} />
+          <Route
+            path=":tripId/edit"
+            element={loggedInUser ? <EditTrip /> : <Navigate to="/login" />}
+          />
         </Route>
         <Route
           path="/login"
@@ -54,6 +59,7 @@ function App() {
           path="*"
           element={<Navigate to={loggedInUser ? "/trips" : "/login"} />}
         />
+
       </Routes>
     </div>
   );
