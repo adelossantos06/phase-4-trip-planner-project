@@ -33,31 +33,31 @@ function CreateTrip() {
                     navigate('/trips');
                 }}
             >
-                {({ isSubmitting }) => (
-                    <Form className="create-trip-form">
-                        <div>
-                            <label htmlFor="title">Title</label>
-                            <Field name="title" type="text" placeholder="Trip Title" />
-                            <ErrorMessage name="title" component="div" />
-                        </div>
-                        <div>
-                            <label htmlFor="start_date">Start Date</label>
-                            <Field name="start_date" type="date" />
-                            <ErrorMessage name="start_date" component="div" />
-                        </div>
-                        <div>
-                            <label htmlFor="end_date">End Date</label>
-                            <Field name="end_date" type="date" />
-                            <ErrorMessage name="end_date" component="div" />
-                        </div>
-                        <div>
-                            <label htmlFor="description">Description</label>
-                            <Field name="description" as="textarea" placeholder="Trip Description" />
-                            <ErrorMessage name="description" component="div" />
-                        </div>
-                        <button type="submit" disabled={isSubmitting}>Create Trip</button>
-                    </Form>
-                )}
+
+                <Form className="create-trip-form">
+                    <div>
+                        <label htmlFor="title">Title</label>
+                        <Field name="title" type="text" placeholder="Trip Title" />
+                        <ErrorMessage name="title" component="div" />
+                    </div>
+                    <div>
+                        <label htmlFor="start_date">Start Date</label>
+                        <Field name="start_date" type="date" />
+                        <ErrorMessage name="start_date" component="div" />
+                    </div>
+                    <div>
+                        <label htmlFor="end_date">End Date</label>
+                        <Field name="end_date" type="date" />
+                        <ErrorMessage name="end_date" component="div" />
+                    </div>
+                    <div>
+                        <label htmlFor="description">Description</label>
+                        <Field name="description" as="textarea" placeholder="Trip Description" />
+                        <ErrorMessage name="description" component="div" />
+                    </div>
+                    <button type="submit">Create Trip</button>
+                </Form>
+
             </Formik>
         </div>
     )
