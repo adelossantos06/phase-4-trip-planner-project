@@ -4,6 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from flask_restful import Resource
 from config import app, db, api
 from models import Trip, Destination, User, Activity
+import bcrypt
 
 class Trips(Resource):
     def get(self):
@@ -17,8 +18,8 @@ class Trips(Resource):
         description = data.get('description')
         start_date = data.get('start_date')
         end_date = data.get('end_date')
-        user_id = data.get('user_id')
-
+        
+        user_id = session.get('user_id')
         if not title or not user_id:
             return make_response({'error': 'Title and User ID are required'}, 400)
 
@@ -157,7 +158,10 @@ class Login(Resource):
         if not user:
             return make_response({'error': 'Invalid username'}, 404)
         
-        if bcrypt.check_password_hash(user.password_hash, data['password']):
+        stored_hash = user.password_hash.encode('utf-8') if isinstance(user.password_hash, str) else user.password_hash
+        provided_password = data['password'].encode('utf-8')
+        
+        if bcrypt.checkpw(provided_password, stored_hash):
             session['user_id'] = user.id
             return make_response(user.to_dict(), 200)
         else:
@@ -186,6 +190,10 @@ class Logout(Resource):
 
 api.add_resource(Logout, '/logout')
 
+@app.before_request
+def check_authorized():
+    if request.endpoint == 'authorized' and not session.get('user_id'):
+        return make_response({'error': 'Unauthorized'}, 401)
 
 
 if __name__ == '__main__':

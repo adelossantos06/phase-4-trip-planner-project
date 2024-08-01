@@ -103,6 +103,11 @@ class UserDestinationAssociation(db.Model):
     __tablename__ = 'user_destination_association'
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     destination_id = db.Column(db.Integer, db.ForeignKey('destinations.id'), primary_key=True)
+    is_favorite = db.Column(db.Boolean, nullable=False, default=True)
+
+    __table_args__ = (
+    db.Index('ix_user_destination', 'user_id', 'destination_id'),
+    )
 
     user = db.relationship("User", back_populates="destination_associations")
     destination = db.relationship("Destination", back_populates="user_associations")

@@ -45,9 +45,9 @@ if __name__ == '__main__':
         db.session.add_all([a1])
         db.session.commit()
 
-        association1 = UserDestinationAssociation(user=u1, destination=d1)
-        association2 = UserDestinationAssociation(user=u1, destination=d2)
-        association3 = UserDestinationAssociation(user=u2, destination=d1)
+        association1 = UserDestinationAssociation(user=u1, destination=d1, is_favorite=True)
+        association2 = UserDestinationAssociation(user=u1, destination=d2, is_favorite=False)
+        association3 = UserDestinationAssociation(user=u2, destination=d1, is_favorite=False)
 
         # Add associations to the session
         db.session.add_all([association1, association2, association3])
