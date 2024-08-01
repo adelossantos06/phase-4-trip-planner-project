@@ -8,7 +8,11 @@ import bcrypt
 
 class Trips(Resource):
     def get(self):
-        trips = Trip.query.all()
+        user_id = session.get('user_id')
+        if not user_id:
+            return make_response({'error': 'Unauthorized'}, 401)
+
+        trips = Trip.query.filter_by(user_id=user_id).all()
         trip_list = [trip.to_dict() for trip in trips]
         return make_response(trip_list, 200)
     
@@ -42,14 +46,14 @@ api.add_resource(Trips, '/trips')
 class TripResource(Resource):
     def get(self, id):
         trip = Trip.query.get(id)
-        if not trip:
-            return make_response({'error': 'Trip not found'}, 404)
+        if not trip or trip.user_id != session.get('user_id'):
+            return make_response({'error': 'Trip not found or unauthorized'}, 404)
         return make_response(trip.to_dict(), 200)
 
     def patch(self, id):
         trip = Trip.query.get(id)
-        if not trip:
-            return make_response({'error': 'Trip not found'}, 404)
+        if not trip or trip.user_id != session.get('user_id'):
+            return make_response({'error': 'Trip not found or unauthorized'}, 404)
 
         params = request.json
         for attr, value in params.items():
@@ -60,8 +64,8 @@ class TripResource(Resource):
 
     def delete(self, id):
         trip = Trip.query.get(id)
-        if not trip:
-            return make_response({'error': 'Trip not found'}, 404)
+        if not trip or trip.user_id != session.get('user_id'):
+            return make_response({'error': 'Trip not found or unauthorized'}, 404)
 
         db.session.delete(trip)
         db.session.commit()
