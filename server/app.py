@@ -89,15 +89,15 @@ class DestinationsByTrip(Resource):
     def get(self, trip_id):
         trip = Trip.query.get(trip_id)
         if not trip:
-            return make_response({'error' : 'Trip not found'}, 404)
+            return make_response({'error': 'Trip not found'}, 404)
 
         destinations = [destination.to_dict() for destination in trip.destinations]
-        return make_response(destinaitons, 200)
+        return make_response(destinations, 200)
 
     def post(self, trip_id):
         trip = Trip.query.get(trip_id)
         if not trip:
-            return make_response({'error' : 'Trip not found'}, 404)
+            return make_response({'error': 'Trip not found'}, 404)
 
         data = request.json
         city = data.get('city')
@@ -118,7 +118,7 @@ class DestinationsByTrip(Resource):
 
         return make_response(new_destination.to_dict(), 201)
 
-api.add_resource(DestinationsByTrip, '/trips/<int:id>/destinations')
+api.add_resource(DestinationsByTrip, '/trips/<int:trip_id>/destinations')
 
 
 

@@ -4,10 +4,11 @@ import Signup from "./Signup";
 import Login from "./Login";
 import Logout from "./Logout";
 import Navbar from "./Navbar";
-import Trips from "./Trips";
 import TripContainer from "./TripContainer";
 import CreateTrip from "./CreateTrip";
 import EditTrip from "./EditTrip";
+import DestinationForm from "./DestinationForm";
+import DestinationList from "./DestinationList";
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -59,6 +60,8 @@ function App() {
           path="*"
           element={<Navigate to={loggedInUser ? "/trips" : "/login"} />}
         />
+        <Route path="/trips/:tripId/destinations" element={<DestinationList />} />
+        <Route path="/trips/:tripId/destinations/new" element={<DestinationForm />} />
 
       </Routes>
     </div>
