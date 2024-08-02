@@ -3,9 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-function DestinationForm() {
-    const { tripId } = useParams();
+function DestinationForm({ onDestinationAdded, }) {
+
     const navigate = useNavigate();
+    const { tripId } = useParams();
+
 
     const initialValues = {
         city: '',
@@ -21,7 +23,7 @@ function DestinationForm() {
         time_zone: Yup.string()
     });
 
-    const handleSubmit = (values, tripId) => {
+    const handleSubmit = (values, { resetForm }) => {
         fetch(`/trips/${tripId}/destinations`, {
             method: 'POST',
             headers: {
@@ -31,6 +33,8 @@ function DestinationForm() {
         })
             .then(resp => {
                 if (resp.ok) {
+                    onDestinationAdded()
+                    resetForm();
                     navigate(`/trips/${tripId}/destinations`);
                 }
             })
@@ -45,29 +49,31 @@ function DestinationForm() {
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
             >
-                <Form>
-                    <div>
-                        <label htmlFor="city">City</label>
-                        <Field name="city" type="text" />
-                        <ErrorMessage name="city" component="div" />
-                    </div>
-                    <div>
-                        <label htmlFor="state">State</label>
-                        <Field name="state" type="text" />
-                        <ErrorMessage name="state" component="div" />
-                    </div>
-                    <div>
-                        <label htmlFor="country">Country</label>
-                        <Field name="country" type="text" />
-                        <ErrorMessage name="country" component="div" />
-                    </div>
-                    <div>
-                        <label htmlFor="time_zone">Time Zone</label>
-                        <Field name="time_zone" type="text" />
-                        <ErrorMessage name="time_zone" component="div" />
-                    </div>
-                    <button type="submit">Submit</button>
-                </Form>
+                {({ resetForm }) => (
+                    <Form>
+                        <div>
+                            <label htmlFor="city">City</label>
+                            <Field name="city" type="text" />
+                            <ErrorMessage name="city" component="div" />
+                        </div>
+                        <div>
+                            <label htmlFor="state">State</label>
+                            <Field name="state" type="text" />
+                            <ErrorMessage name="state" component="div" />
+                        </div>
+                        <div>
+                            <label htmlFor="country">Country</label>
+                            <Field name="country" type="text" />
+                            <ErrorMessage name="country" component="div" />
+                        </div>
+                        <div>
+                            <label htmlFor="time_zone">Time Zone</label>
+                            <Field name="time_zone" type="text" />
+                            <ErrorMessage name="time_zone" component="div" />
+                        </div>
+                        <button type="submit">Submit</button>
+                    </Form>
+                )}
             </Formik>
         </div>
     );

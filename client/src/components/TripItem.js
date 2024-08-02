@@ -10,7 +10,7 @@ function TripItem({ trip, handleDelete }) {
     }
 
     const handleDestinations = () => {
-        navigate(`/trips/:tripId/destinations`)
+        navigate(`/trips/${trip.id}/destinations`)
     }
 
     return (

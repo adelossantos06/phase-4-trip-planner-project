@@ -1,9 +1,9 @@
 
-from flask import Flask, request, make_response, session
+from flask import Flask, request, make_response, session,jsonify
 from sqlalchemy.exc import IntegrityError
 from flask_restful import Resource
 from config import app, db, api
-from models import Trip, Destination, User, Activity
+from models import Trip, Destination, User, Activity, UserDestinationAssociation
 import bcrypt
 
 class Trips(Resource):
@@ -92,18 +92,25 @@ class DestinationsByTrip(Resource):
             return make_response({'error': 'Trip not found'}, 404)
 
         destinations = [destination.to_dict() for destination in trip.destinations]
-        return make_response(destinations, 200)
+        return make_response(jsonify(destinations), 200) 
 
     def post(self, trip_id):
+        user_id = session.get('user_id')
         trip = Trip.query.get(trip_id)
         if not trip:
-            return make_response({'error': 'Trip not found'}, 404)
+            return make_response(jsonify({'error': 'Trip not found'}), 404)
 
         data = request.json
+        if not data:
+            return make_response(jsonify({'error': 'Invalid input'}), 400)
+        
         city = data.get('city')
         state = data.get('state')
         country = data.get('country')
         time_zone = data.get('time_zone')
+
+        if not all([city, state, country, time_zone]):
+            return make_response(jsonify({'error': 'Missing required fields'}), 400)
 
         new_destination = Destination(
             city=city,
@@ -113,12 +120,56 @@ class DestinationsByTrip(Resource):
             trip_id=trip_id
         )
 
-        db.session.add(new_destination)
-        db.session.commit()
+        try:
+            db.session.add(new_destination)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return make_response(jsonify({'error': str(e)}), 500)
 
-        return make_response(new_destination.to_dict(), 201)
+        if user_id:
+            try:
+                association = UserDestinationAssociation(
+                    user_id=user_id,
+                    destination_id=new_destination.id,
+                    is_favorite=False 
+                )
+                db.session.add(association)
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                return make_response(jsonify({'error': str(e)}), 500)
+
+        return make_response(jsonify({'message': 'Destination added and associated successfully'}), 201)
 
 api.add_resource(DestinationsByTrip, '/trips/<int:trip_id>/destinations')
+
+
+
+class UserDestinationAssociationResource(Resource):
+    def patch(self, trip_id, destination_id):
+        user_id = session.get('user_id')
+        if not user_id:
+            return make_response({'error': 'Unauthorized'}, 401)
+
+        destination = Destination.query.filter_by(id=destination_id, trip_id=trip_id).first()
+        if not destination:
+            return make_response({'error': 'Destination not found'}, 404)
+
+        association = UserDestinationAssociation.query.filter_by(user_id=user_id, destination_id=destination_id).first()
+        if not association:
+            return make_response({'error': 'Association not found'}, 404)
+
+        data = request.json
+        is_favorite = data.get('is_favorite')
+        if is_favorite is not None:
+            association.is_favorite = is_favorite
+            db.session.commit()
+            return make_response({'message': 'Favorite status updated successfully'}, 200)
+        else:
+            return make_response({'error': 'Invalid data'}, 400)
+
+api.add_resource(UserDestinationAssociationResource, '/trips/<int:trip_id>/destinations/<int:destination_id>/association')
 
 
 

@@ -6,7 +6,6 @@ import * as Yup from 'yup';
 
 function EditTrip() {
     const { trips, updateTrip } = useOutletContext();
-    console.log(trips)
     const { tripId } = useParams();
     const navigate = useNavigate()
 
