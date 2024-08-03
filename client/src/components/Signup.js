@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./Login.css"
 import { useNavigate } from 'react-router-dom';
 import { Formik, Field, Form } from 'formik';
 import * as yup from 'yup';
@@ -50,15 +51,15 @@ function Signup() {
 
     return (
         <>
-            <h2>Signup</h2>
-            <div>
+            <h2 className="signup-h2" >Signup</h2>
+            <div className="form-container">
                 <Formik
                     initialValues={initialValues}
                     onSubmit={handleSubmit}
                     validationSchema={signupSchema}
                 >
                     {({ isSubmitting, errors }) => (
-                        <Form className="signup-form">
+                        <Form className="form">
                             <label htmlFor="username">Username:</label>
                             <Field name="username" type="text" placeholder="Username" />
                             {errors.username && <div>{errors.username}</div>}
@@ -73,7 +74,7 @@ function Signup() {
 
                             {errors.server && <div>{errors.server}</div>}
 
-                            <button type="submit" disabled={isSubmitting}>
+                            <button id="sign-submit" type="submit" disabled={isSubmitting}>
                                 {isSubmitting ? 'Submitting...' : 'Submit'}
                             </button>
                         </Form>

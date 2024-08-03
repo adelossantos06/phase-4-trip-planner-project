@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useOutletContext } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import "./CreateTrip.css"
 
 function CreateTrip() {
     const { addTrip } = useOutletContext();
@@ -23,7 +24,7 @@ function CreateTrip() {
     })
 
     return (
-        <div>
+        <div className="create-trip-container" >
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
@@ -35,27 +36,27 @@ function CreateTrip() {
             >
 
                 <Form className="create-trip-form">
-                    <div>
-                        <label htmlFor="title">Title</label>
+                    <div className="form-group">
+                        <label htmlFor="title">Title:</label>
                         <Field name="title" type="text" placeholder="Trip Title" />
                         <ErrorMessage name="title" component="div" />
                     </div>
-                    <div>
-                        <label htmlFor="start_date">Start Date</label>
+                    <div className="form-group">
+                        <label htmlFor="start_date">Start Date:</label>
                         <Field name="start_date" type="date" />
                         <ErrorMessage name="start_date" component="div" />
                     </div>
-                    <div>
-                        <label htmlFor="end_date">End Date</label>
+                    <div className="form-group">
+                        <label htmlFor="end_date">End Date:</label>
                         <Field name="end_date" type="date" />
                         <ErrorMessage name="end_date" component="div" />
                     </div>
-                    <div>
-                        <label htmlFor="description">Description</label>
+                    <div className="form-group">
+                        <label htmlFor="description">Description:</label>
                         <Field name="description" as="textarea" placeholder="Trip Description" />
                         <ErrorMessage name="description" component="div" />
                     </div>
-                    <button type="submit">Create Trip</button>
+                    <button type="submit" className="submit-button" >Create Trip</button>
                 </Form>
 
             </Formik>

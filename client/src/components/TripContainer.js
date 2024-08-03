@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Outlet } from 'react-router-dom';
 import TripItem from "./TripItem";
+import "./TripContainer.css";
 
 function TripContainer() {
     const [trips, setTrips] = useState([]);
@@ -9,7 +10,6 @@ function TripContainer() {
         fetch('/trips')
             .then((resp) => resp.json())
             .then((data) => {
-                console.log('Fetched trips:', data);
                 setTrips(data);
             })
             .catch((error) => console.error('Error fetching trips:', error));
@@ -65,16 +65,16 @@ function TripContainer() {
 
     return (
         <div>
-            <h1>Trips</h1>
+            <h1>My Trips</h1>
             <Outlet context={contextValue} />
-            <div>
-                {trips.map((trip) => {
-                    return <TripItem
+            <div className="trip-cards-container">
+                {trips.map((trip) => (
+                    <TripItem
                         key={trip.id}
                         trip={trip}
                         handleDelete={() => handleDelete(trip.id)}
-                    />;
-                })}
+                    />
+                ))}
             </div>
         </div>
     );

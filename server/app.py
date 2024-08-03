@@ -147,6 +147,17 @@ api.add_resource(DestinationsByTrip, '/trips/<int:trip_id>/destinations')
 
 
 class UserDestinationAssociationResource(Resource):
+    def get(self, trip_id, destination_id):
+        user_id = session.get('user_id')
+        if not user_id:
+            return make_response({'error': 'Unauthorized'}, 401)
+
+        association = UserDestinationAssociation.query.filter_by(user_id=user_id, destination_id=destination_id).first()
+        if not association:
+            return make_response({'error': 'Association not found'}, 404)
+
+        return make_response({'is_favorite': association.is_favorite}, 200)
+
     def patch(self, trip_id, destination_id):
         user_id = session.get('user_id')
         if not user_id:
@@ -165,10 +176,9 @@ class UserDestinationAssociationResource(Resource):
         if is_favorite is not None:
             association.is_favorite = is_favorite
             db.session.commit()
-            return make_response({'message': 'Favorite status updated successfully'}, 200)
+            return make_response({'message': 'Favorite status updated successfully', 'is_favorite': association.is_favorite}, 200)
         else:
             return make_response({'error': 'Invalid data'}, 400)
-
 api.add_resource(UserDestinationAssociationResource, '/trips/<int:trip_id>/destinations/<int:destination_id>/association')
 
 

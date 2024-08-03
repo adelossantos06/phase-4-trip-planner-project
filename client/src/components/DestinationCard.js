@@ -1,19 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import "./DestinationCard.css"
+
 
 function DestinationCard({ destinations }) {
     const { tripId } = useParams();
-    const [isFavorite, setIsFavorite] = useState(destinations.is_favorite);
+    const [isFavorite, setIsFavorite] = useState(false);
+
+
+    useEffect(() => {
+        fetch(`/trips/${tripId}/destinations/${destinations.id}/association`)
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw new Error('Failed to fetch favorite status');
+            })
+            .then(data => {
+
+                setIsFavorite(data.is_favorite);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }, [tripId, destinations.id]);
 
     const handleFavorite = () => {
-        const updatedFavoriteStatus = !isFavorite;
+        const newFavoriteStatus = !isFavorite;
 
         fetch(`/trips/${tripId}/destinations/${destinations.id}/association`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ is_favorite: updatedFavoriteStatus })
+            body: JSON.stringify({ is_favorite: newFavoriteStatus })
         })
             .then(res => {
                 if (res.ok) {
@@ -23,11 +43,13 @@ function DestinationCard({ destinations }) {
             })
             .then(data => {
                 setIsFavorite(data.is_favorite);
+
             })
             .catch(error => {
                 console.error('Error:', error);
             });
     };
+
 
     return (
         <div>
@@ -38,14 +60,7 @@ function DestinationCard({ destinations }) {
                 <p><strong>Time Zone: </strong> {destinations.time_zone}</p>
                 <button
                     onClick={handleFavorite}
-                    style={{
-                        backgroundColor: isFavorite ? 'pink' : 'gray',
-                        color: 'white',
-                        padding: '10px 20px',
-                        border: 'none',
-                        borderRadius: '5px',
-                        cursor: 'pointer'
-                    }}
+                    className="favorite-button"
                 >
                     {isFavorite ? '❤️' : '♡'}
                 </button>

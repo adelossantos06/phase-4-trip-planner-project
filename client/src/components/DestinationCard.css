@@ -1,0 +1,27 @@
+/* destinationcard.css */
+.destination-card {
+    background-color: #708676;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 8px;
+    border: 1px solid;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 200px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.destination-card p {
+    margin: 5px 0;
+}
+
+.favorite-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.favorite-button:hover {
+    color: #ff6347;
+}

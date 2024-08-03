@@ -1,15 +1,16 @@
 import React from "react"
+import "./Navbar.css"
 import { NavLink } from 'react-router-dom';
 import Logout from "./Logout";
-import CreateTrip from "./CreateTrip";
+
 
 function Navbar({ setLoggedInUser }) {
     return (
-        <header>
+        <header className="navbar-header" >
             <h1>Trip Planner</h1>
-            <nav>
-                <NavLink to="/">All my Trips</NavLink>
-                <NavLink to="/trips/create">Create a new trip</NavLink>
+            <nav className="navbar-nav" >
+                <NavLink to="/" className="nav-link" >My Trips</NavLink>
+                <NavLink to="/trips/create" className="nav-link">Create Trip</NavLink>
                 <Logout setLoggedInUser={setLoggedInUser} />
             </nav>
         </header>

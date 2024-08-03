@@ -1,0 +1,41 @@
+.destination-form-container {
+    background-color: #718879;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 320px;
+}
+
+h1 {
+    text-align: center;
+    color: #000000;
+    margin-bottom: 20px;
+    font-size: 30px;
+}
+
+.destination-form .form-group {
+    margin-bottom: 15px;
+}
+
+.destination-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.destination-form input {
+    max-width: 300px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.destination-form button {
+    margin-top: 10px;
+    width: 320px;
+    height: 40px;
+    border: .5px solid;
+    border-radius: 4px;
+    cursor: pointer;
+}

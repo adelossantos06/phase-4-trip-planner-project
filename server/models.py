@@ -7,9 +7,7 @@ from config import db, bcrypt
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
-    serialize_rules = ('-trips.user', '-destination_associations.user', '-destinations.user_associations')
-
-
+    serialize_rules = ('-trips.user', '-destination_associations.user', '-destinations.user_associations' , '-destinations.trip', '-trips.destinations', '-destination_associations.destinations', '-destinations.users')
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
@@ -75,7 +73,7 @@ class Trip(db.Model, SerializerMixin):
 class Destination(db.Model, SerializerMixin):
     __tablename__ = 'destinations'
 
-    serialize_rules = ('-trip.destinations', '-user_associations.destination', '-users.destination_associations')
+    serialize_rules = ('-trip.destinations', '-user_associations.destination', '-users.destination_associations', '-user_associations.user.destination_associations', '-trip.user')
 
 
     id = db.Column(db.Integer, primary_key=True)
@@ -104,7 +102,7 @@ class Destination(db.Model, SerializerMixin):
 class UserDestinationAssociation(db.Model, SerializerMixin):
     __tablename__ = 'user_destination_association'
 
-    serialize_rules = ('-user.destination_associations', '-destination.user_associations')
+    serialize_rules = ('-user.destination_associations', '-destination.user_associations', '-user.destinations', '-destinations.users' )
 
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)

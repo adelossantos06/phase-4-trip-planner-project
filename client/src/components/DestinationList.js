@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import DestinationForm from "./DestinationForm";
 import DestinationCard from "./DestinationCard";
+import "./DestinationList.css"
 
 function DestinationList() {
     const [destinations, setDestinations] = useState([]);
@@ -38,18 +39,21 @@ function DestinationList() {
 
 
     return (
-        <div>
+        <div >
             <DestinationForm tripId={tripId} onDestinationAdded={handleDestinationAdded} />
+            <h2 className="destination-h2">Destinations</h2>
+            <div class="destination-list-container"  >
 
-            <h2>Destinations</h2>
-            <div>
-                {destinations.map((destination) => {
-                    return <DestinationCard
-                        key={destination.id}
-                        destinations={destination}
+                <div class="destination-cards" >
+                    {destinations.map((destination) => {
+                        return <DestinationCard
+                            class="destination-card"
+                            key={destination.id}
+                            destinations={destination}
 
-                    />;
-                })}
+                        />;
+                    })}
+                </div>
             </div>
         </div >
     );

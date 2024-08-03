@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useOutletContext } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import "./EditTrip.css"
 
 function EditTrip() {
     const { trips, updateTrip } = useOutletContext();
@@ -28,8 +29,8 @@ function EditTrip() {
     })
 
     return (
-        <div>
-            <h2>Edit Trip Details</h2>
+        <div className="edit-trip-container">
+            <h1>Edit Trip Details</h1>
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
@@ -38,28 +39,28 @@ function EditTrip() {
                     navigate('/trips')
                 }}
             >
-                <Form>
-                    <div>
-                        <label htmlFor="title">Title</label>
+                <Form className="edit-trip-form" >
+                    <div className="form-group">
+                        <label htmlFor="title">Title:</label>
                         <Field name="title" type="text" placeholder="Trip Title" />
                         <ErrorMessage name="title" component="div" />
                     </div>
-                    <div>
-                        <label htmlFor="start_date">Start Date</label>
+                    <div className="form-group">
+                        <label htmlFor="start_date">Start Date:</label>
                         <Field name="start_date" type="date" />
                         <ErrorMessage name="start_date" component="div" />
                     </div>
-                    <div>
-                        <label htmlFor="end_date">End Date</label>
+                    <div className="form-group">
+                        <label htmlFor="end_date">End Date:</label>
                         <Field name="end_date" type="date" />
                         <ErrorMessage name="end_date" component="div" />
                     </div>
-                    <div>
-                        <label htmlFor="description">Description</label>
+                    <div className="form-group">
+                        <label htmlFor="description">Description:</label>
                         <Field name="description" as="textarea" placeholder="Trip Description" />
                         <ErrorMessage name="description" component="div" />
                     </div>
-                    <button type="submit" >Save Changes</button>
+                    <button type="submit" className="submit-button" >Save Changes</button>
                 </Form>
             </Formik>
         </div >

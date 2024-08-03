@@ -1,4 +1,5 @@
 import React from "react";
+import "./Login.css"
 import { useNavigate } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import { Formik, Field, Form } from 'formik';
@@ -52,15 +53,15 @@ function Login({ setLoggedInUser }) {
 
     return (
         <>
-            <h2>Login</h2>
-            <div>
+            <h2 className="login-h2">Login</h2>
+            <div className="form-container">
                 <Formik
                     initialValues={initialValues}
                     onSubmit={handleSubmit}
                     validationSchema={loginSchema}
                 >
                     {({ errors }) => (
-                        <Form className='login-form'>
+                        <Form className='form'>
                             <label htmlFor="username">Username:</label>
                             <Field name="username" type="text" placeholder="Username" />
                             {errors.username && <div>{errors.username}</div>}
@@ -71,14 +72,14 @@ function Login({ setLoggedInUser }) {
 
                             {errors.server && <div>{errors.server}</div>}
 
-                            <button type="submit">Login</button>
+                            <button className='login-submit-button' type="submit">Login</button>
                         </Form>
                     )}
                 </Formik>
                 <div className="signup">
                     <p>Don't have an account?</p>
                     <NavLink to="/signup">
-                        <button className='signup-button'>Sign Up</button>
+                        <button className="login-signup-button" >Sign Up</button>
                     </NavLink>
 
                 </div>
