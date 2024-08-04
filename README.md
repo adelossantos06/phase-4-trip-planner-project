@@ -14,7 +14,7 @@ Trip Planner is a web application that allows users to create, manage, and view 
 * View trp details and destinations
 
 
-# Technologies Used
+## Technologies Used
 
 - **Frontend**: React, Formik, Yup, CSS
 - **Backend**: Flask, SQLAlchemy, Flask-Mgrate, Bcrypt
