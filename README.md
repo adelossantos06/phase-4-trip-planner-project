@@ -11,7 +11,7 @@ Trip Planner is a web application that allows users to create, manage, and view 
 
 * Add destinations to trips
 
-* View trp details and destinations
+* View trip details and destinations
 
 
 ## Technologies Used
