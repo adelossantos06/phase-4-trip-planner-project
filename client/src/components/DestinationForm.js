@@ -20,8 +20,8 @@ function DestinationForm({ onDestinationAdded, }) {
     const validationSchema = Yup.object({
         city: Yup.string().required('City is required'),
         state: Yup.string().required('State is required'),
-        country: Yup.string(),
-        time_zone: Yup.string()
+        country: Yup.string().required('Country is required'),
+        time_zone: Yup.string().required('Time Zone is required')
     });
 
     const handleSubmit = (values, { resetForm }) => {

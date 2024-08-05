@@ -11,7 +11,7 @@ function Signup() {
     const signupSchema = yup.object().shape({
         username: yup.string().min(2, 'Username is too Short!').required('Username is required'),
         password: yup.string().min(5, 'Password is too Short!').required('Password is required'),
-        age: yup.number().min(16, 'Age must be at least 16').required('Age is required')
+        age: yup.number().min(16, 'Age must be at least 16').required('Age is required. Users must be at least 16.')
     });
 
     const initialValues = {
@@ -32,7 +32,6 @@ function Signup() {
             if (resp.ok) {
                 resp.json().then((user) => {
                     setUser(user);
-                    // TODO: Navigate to sign in
                     navigate('/login');
                     resetForm()
                 });

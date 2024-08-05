@@ -21,6 +21,7 @@ function CreateTrip() {
         end_date: Yup.date()
             .min(Yup.ref('start_date'), 'End date cannot be before start date')
             .required('End Date is required'),
+        description: Yup.string().required('Description is required')
     })
 
     return (

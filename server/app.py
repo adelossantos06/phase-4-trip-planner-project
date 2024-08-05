@@ -3,7 +3,7 @@ from flask import Flask, request, make_response, session,jsonify
 from sqlalchemy.exc import IntegrityError
 from flask_restful import Resource
 from config import app, db, api
-from models import Trip, Destination, User, Activity, UserDestinationAssociation
+from models import Trip, Destination, User, UserDestinationAssociation
 import bcrypt
 
 class Trips(Resource):
@@ -181,52 +181,6 @@ class UserDestinationAssociationResource(Resource):
             return make_response({'error': 'Invalid data'}, 400)
 api.add_resource(UserDestinationAssociationResource, '/trips/<int:trip_id>/destinations/<int:destination_id>/association')
 
-
-
-class ActivitiesByDestination(Resource):
-    def get(self, destination_id):
-        destination = Destination.query.get(destination_id)
-        if not destination:
-            return make_response({'error': 'Destination not found'}, 404)
-
-        activities = [
-            activity.to_dict() for activity in destination.activities
-        ]
-        return make_response(activities, 200)
-    
-    def post(self, destination_id):
-        destination = Destination.query.get(destination_id)
-        if not destination:
-            return make_response({'error': 'Destination not found'}, 404)
-
-        params = request.json
-        name = params.get('name')
-        description = params.get('description')
-        trip_id = params.get('trip_id')
-
-        if not name or not trip_id:
-            return make_response({'error': 'Name and Trip ID are required'}, 400)
-
-        activity = Activity(name=name, description=description, trip_id=trip_id, destination_id=destination_id)
-        db.session.add(activity)
-        db.session.commit()
-
-        return make_response(activity.to_dict(), 201)
-
-api.add_resource(ActivitiesByDestination, '/destinations/<int:destination_id>/activities')
-
-
-class ActivityResource(Resource):
-    def delete(self, id):
-        activity = Activity.query.get(id)
-        if not activity:
-            return make_response({'error': 'Activity not found'}, 404)
-
-        db.session.delete(activity)
-        db.session.commit()
-        return make_response('', 204)
-
-api.add_resource(ActivityResource, '/activities/<int:id>')
 
 class Users(Resource):
     def post(self):
