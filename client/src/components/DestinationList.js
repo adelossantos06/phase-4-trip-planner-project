@@ -14,6 +14,7 @@ function DestinationList() {
         setDestinations(data);
     };
 
+
     useEffect(() => {
         fetchDestinations();
     }, []);
@@ -21,6 +22,8 @@ function DestinationList() {
     const handleDestinationAdded = () => {
         fetchDestinations();
     };
+
+
 
 
     useEffect(() => {

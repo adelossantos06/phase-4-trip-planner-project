@@ -58,7 +58,7 @@ class Trip(db.Model, SerializerMixin):
 
     destinations = db.relationship('Destination', back_populates='trip', cascade='all, delete-orphan')
     user = db.relationship('User', back_populates='trips')
-   
+    # activities = db.relationship('Activity', back_populates='trip', cascade='all, delete-orphan')
 
     def to_dict(self):
         return {
@@ -84,7 +84,7 @@ class Destination(db.Model, SerializerMixin):
     trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
 
     trip = db.relationship('Trip', back_populates='destinations')
-    
+    activities = db.relationship('Activity', back_populates='destination', cascade='all, delete-orphan')
 
     user_associations = db.relationship('UserDestinationAssociation', back_populates='destination', cascade='all, delete-orphan')
     users = association_proxy('user_associations', 'user')
@@ -119,4 +119,26 @@ class UserDestinationAssociation(db.Model, SerializerMixin):
             'is_favorite': self.is_favorite
         }
 
+class Activity(db.Model, SerializerMixin):
+    __tablename__ = 'activities'
 
+    serialize_rules = ( '-destination.activities', '-destination.trip')
+
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String,nullable=False)
+    description = db.Column(db.String)
+    # trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
+    destination_id = db.Column(db.Integer, db.ForeignKey('destinations.id'), nullable=False)
+
+    # trip = db.relationship('Trip', back_populates='activities')
+    destination = db.relationship('Destination', back_populates='activities')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            # 'trip_id': self.trip_id,
+            'destination_id':self.destination_id
+        }

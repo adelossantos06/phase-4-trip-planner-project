@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import ActivityForm from "./ActivityForm";
+import { useNavigate } from "react-router-dom";
 import "./DestinationCard.css"
 
 
 function DestinationCard({ destinations }) {
     const { tripId } = useParams();
     const [isFavorite, setIsFavorite] = useState(false);
+    const navigate = useNavigate();
+
+    const handleActivity = () => {
+        navigate(`/trips/${tripId}/destinations/${destinations.id}/activities/new`, {
+            state: { destinations }
+        });
+    };
 
 
     useEffect(() => {
@@ -48,6 +57,8 @@ function DestinationCard({ destinations }) {
             .catch(error => {
                 console.error('Error:', error);
             });
+
+
     };
 
 
@@ -64,7 +75,13 @@ function DestinationCard({ destinations }) {
                 >
                     {isFavorite ? '❤️' : '♡'}
                 </button>
+                <button
+                    onClick={handleActivity}
+                >
+                    Add/ View Activity
+                </button>
             </div>
+
         </div>
     );
 }

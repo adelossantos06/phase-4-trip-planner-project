@@ -9,6 +9,7 @@ import CreateTrip from "./CreateTrip";
 import EditTrip from "./EditTrip";
 import DestinationForm from "./DestinationForm";
 import DestinationList from "./DestinationList";
+import ActivityForm from "./ActivityForm"
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -62,7 +63,7 @@ function App() {
         />
         <Route path="/trips/:tripId/destinations" element={<DestinationList />} />
         <Route path="/trips/:tripId/destinations/new" element={<DestinationForm />} />
-
+        <Route path="/trips/:tripId/destinations/:destinationId/activities/new" element={<ActivityForm />} />
       </Routes>
     </div>
   );

@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import "./DestinationForm.css"
 
-function DestinationForm({ onDestinationAdded, }) {
+function DestinationForm({ onDestinationAdded }) {
 
     const navigate = useNavigate();
     const { tripId } = useParams();
