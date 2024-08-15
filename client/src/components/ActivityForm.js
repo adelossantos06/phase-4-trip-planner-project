@@ -65,7 +65,7 @@ function ActivityForm() {
     return (
         <div  >
             <div className="activity-form-container" >
-                <h2>Activity for {destinations.city}, {destinations.state}</h2>
+                <h2 className="activity-form-title" >Activity for {destinations.city}, {destinations.state}</h2>
                 <Formik
                     initialValues={initialValues}
                     validationSchema={validationSchema}
@@ -73,27 +73,27 @@ function ActivityForm() {
                 >
                     <Form className="activity-form" >
                         <div>
-                            <label htmlFor="name">Name</label>
+                            <label htmlFor="name">Name:</label>
                             <Field name="name" type="text" />
                             <ErrorMessage name="name" component="div" />
                         </div>
 
                         <div>
-                            <label htmlFor="description">Description</label>
+                            <label htmlFor="description">Description:</label>
                             <Field name="description" as="textarea" />
                             <ErrorMessage name="description" component="div" />
                         </div>
 
                         <button
                             type="submit"
-
+                            className="add-activity-button"
                         >Add Activity
                         </button>
                     </Form>
                 </Formik>
             </div>
             <div>
-                <h2>Activities</h2>
+                <h2 className="activities-header" >Activities</h2>
                 {activities.length > 0 ? (
                     activities.map((activity, index) => (
                         <ActivityCard key={index} activities={activity} />

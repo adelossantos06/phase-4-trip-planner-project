@@ -1,6 +1,6 @@
 .activity-card-container {
     background-color: #718879;
-    padding: 20px;
+    padding: 8px;
     margin: 20px auto;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -8,10 +8,10 @@
 }
 
 .activity-card-title {
-    text-align: center;
     color: #000000;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     font-size: 24px;
+    margin-top: 10px;
 }
 
 .activity-card p {
@@ -23,16 +23,4 @@
 .activity-card-container p strong {
     font-weight: bold;
     color: #000000;
-}
-
-.activity-card-container button {
-    margin-top: 10px;
-    width: 100%;
-    height: 40px;
-    border: 0.5px solid #ddd;
-    border-radius: 4px;
-    cursor: pointer;
-    background-color: #ffffff;
-    color: #000000;
-    font-weight: bold;
 }

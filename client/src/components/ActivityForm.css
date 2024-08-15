@@ -7,11 +7,16 @@
     max-width: 320px;
 }
 
-.activity-form h2 {
+.activity-form-title {
     text-align: center;
     color: #000000;
     margin-bottom: 20px;
     font-size: 24px;
+}
+
+.activities-header {
+    text-align: center;
+    margin-top: 100px;
 }
 
 .activity-form label {
@@ -38,14 +43,15 @@
 }
 
 
-.activity-form button {
-    margin-top: 10px;
-    width: 100%;
-    height: 40px;
-    border: 0.5px solid #ddd;
-    border-radius: 4px;
-    cursor: pointer;
-    background-color: #ffffff;
-    color: #000000;
-    font-weight: bold;
+.add-activity-button {
+    background-color: #dfe7e0;
+    border: none;
+    /* color: rgb(0, 0, 0); */
+    /* text-align: center; */
+    /* font-size: 16px; */
+    /* cursor: pointer; */
+    border-radius: 8px;
+    width: 320px;
+    padding: 10px 32px;
+    margin-top: 20px;
 }
