@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import { useLocation } from "react-router-dom";
 import ActivityCard from "./ActivityCard";
 import "./ActivityForm.css"
+import { Reorder, useDragControls } from "framer-motion"
 
 function ActivityForm() {
     const { destinationId, tripId } = useParams();
@@ -49,7 +50,6 @@ function ActivityForm() {
             .then(newActivity => {
                 setActivities(prevActivities => {
                     const updatedActivities = [...prevActivities, newActivity];
-                    console.log("Updated Activities:", updatedActivities); // Debugging log
                     return updatedActivities;
                 });
                 resetForm();
@@ -94,13 +94,18 @@ function ActivityForm() {
             </div>
             <div>
                 <h2 className="activities-header" >Activities</h2>
-                {activities.length > 0 ? (
-                    activities.map((activity, index) => (
-                        <ActivityCard key={index} activities={activity} />
-                    ))
-                ) : (
-                    <p>No activities yet.</p>
-                )}
+                <Reorder.Group className="reorder-group" axis="y" values={activities} onReorder={setActivities} >
+                    {activities.length > 0 ? (
+                        activities.map((activity) => (
+                            <Reorder.Item value={activity} key={activity.id}>
+                                <ActivityCard activities={activity} />
+                            </Reorder.Item>
+                        ))
+                    ) : (
+                        <p className="no-activites">No Activities yet.</p>
+                    )}
+
+                </Reorder.Group>
             </div>
         </div>
     );

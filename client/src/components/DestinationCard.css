@@ -1,18 +1,18 @@
 /* destinationcard.css */
-.destination-card {
-    background-color: #708676;
+#destination-card {
+    background-color: rgb(100, 138, 114);
     padding: 15px;
-    margin: 10px;
+    margin: 20px;
     border-radius: 8px;
     border: 1px solid;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-width: 200px;
-    text-align: center;
-    font-size: 18px;
+    height: 150px;
+    width: 200px;
+    font-size: 20px;
 }
 
-.destination-card p {
-    margin: 5px 0;
+#destination-card p {
+    margin: 3px 0;
 }
 
 .favorite-button {
@@ -20,8 +20,19 @@
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
+    padding-right: 40px;
 }
 
 .favorite-button:hover {
     color: #ff6347;
+}
+
+.view-activity-button {
+    background-color: #dfe7e0;
+    margin-top: 15px;
+    height: 30px;
+    border: .5px solid;
+    border-radius: 4px;
+    cursor: pointer;
+    max-width: 150px;
 }

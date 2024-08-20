@@ -64,7 +64,7 @@ function DestinationCard({ destinations }) {
 
     return (
         <div>
-            <div className="destination-card">
+            <div id="destination-card">
                 <p><strong>City: </strong> {destinations.city}</p>
                 <p><strong>State: </strong> {destinations.state}</p>
                 <p><strong>Country: </strong> {destinations.country}</p>
@@ -77,6 +77,7 @@ function DestinationCard({ destinations }) {
                 </button>
                 <button
                     onClick={handleActivity}
+                    className="view-activity-button"
                 >
                     Add/ View Activity
                 </button>

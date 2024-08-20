@@ -46,16 +46,13 @@ function DestinationList() {
             <DestinationForm tripId={tripId} onDestinationAdded={handleDestinationAdded} />
             <h2 className="destination-h2">Destinations</h2>
             <div className="destination-list-container"  >
-
                 <div className="destination-cards" >
-                    {destinations.map((destination) => {
-                        return <DestinationCard
-                            className="destination-card"
+                    {destinations.map((destination) => (
+                        <DestinationCard
                             key={destination.id}
                             destinations={destination}
-
-                        />;
-                    })}
+                        />
+                    ))}
                 </div>
             </div>
         </div >

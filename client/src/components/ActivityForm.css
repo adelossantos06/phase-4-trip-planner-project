@@ -45,13 +45,23 @@
 
 .add-activity-button {
     background-color: #dfe7e0;
-    border: none;
-    /* color: rgb(0, 0, 0); */
-    /* text-align: center; */
-    /* font-size: 16px; */
-    /* cursor: pointer; */
-    border-radius: 8px;
-    width: 320px;
-    padding: 10px 32px;
-    margin-top: 20px;
+    margin-top: 10px;
+    width: 540px;
+    height: 40px;
+    border: .5px solid;
+    border-radius: 4px;
+    cursor: pointer;
+    max-width: 320px;
+}
+
+.reorder-group {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.no-activites {
+    text-align: center;
+    font-size: 25px;
+    color: rgb(177, 72, 72);
 }

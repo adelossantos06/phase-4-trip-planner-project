@@ -2,7 +2,6 @@ import React from "react";
 import "./ActivityCard.css"
 
 function ActivityCard({ activities }) {
-    console.log(activities)
     return (
         <>
 

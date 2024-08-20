@@ -5,6 +5,7 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     max-width: 320px;
+    list-style-type: none;
 }
 
 .activity-card-title {
@@ -23,4 +24,10 @@
 .activity-card-container p strong {
     font-weight: bold;
     color: #000000;
+}
+
+
+.drag-handle {
+    padding: 5px;
+    font-size: 18px;
 }
