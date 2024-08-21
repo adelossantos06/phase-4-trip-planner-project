@@ -1,6 +1,6 @@
 # Trip Planner
 
-Trip Planner is a web application that allows users to create, manage, and view trips and their destinations. Users can add, edit and delete trips as well as add destinations to each trip.
+Trip Planner is a web application that allows users to create, manage, and view trips and their destinations. Users can add, edit and delete trips as well as add destinations and activities to each trip.
 
 
 ## Features
@@ -13,12 +13,16 @@ Trip Planner is a web application that allows users to create, manage, and view 
 
 * Users can favorite destinations
 
-* View trip details and destinations
+* Add, edit, and delete activities for each destinaition
+
+* Reorder activities within a destination
+
+* View trip details, destinations, and activities
 
 
 ## Technologies Used
 
-- **Frontend**: React, Formik, Yup, CSS
+- **Frontend**: React, Formik, Yup, CSS, Framer Motion
 - **Backend**: Flask, SQLAlchemy, Flask-Mgrate, Bcrypt
 - **Database**: SQLite
 

@@ -43,6 +43,7 @@ function DestinationList() {
 
     return (
         <div >
+
             <DestinationForm tripId={tripId} onDestinationAdded={handleDestinationAdded} />
             <h2 className="destination-h2">Destinations</h2>
             <div className="destination-list-container"  >
@@ -55,6 +56,10 @@ function DestinationList() {
                     ))}
                 </div>
             </div>
+            {destinations.length == 0 && (
+                <p className="no-destinations" >No Destinations Yet</p>
+            )}
+
         </div >
     );
 }
