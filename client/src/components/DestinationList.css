@@ -1,10 +1,9 @@
-/* destinationlist.css */
 .destination-list-container {
     display: flex;
     flex-wrap: wrap;
     padding: 20px;
     margin: 20px;
-    max-width: 1000px;
+    width: 100%;
     justify-content: center;
 }
 
