@@ -4,7 +4,6 @@ import "./ActivityCard.css"
 function ActivityCard({ activities }) {
     return (
         <>
-
             <div className="activity-card-container">
                 <div className="activity-card">
                     <h2 className="activity-card-title">{activities.name}</h2>

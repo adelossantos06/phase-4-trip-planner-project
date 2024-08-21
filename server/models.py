@@ -128,10 +128,9 @@ class Activity(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String,nullable=False)
     description = db.Column(db.String)
-    # trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
     destination_id = db.Column(db.Integer, db.ForeignKey('destinations.id'), nullable=False)
+    order = db.Column(db.Integer)
 
-    # trip = db.relationship('Trip', back_populates='activities')
     destination = db.relationship('Destination', back_populates='activities')
 
     def to_dict(self):
@@ -139,6 +138,6 @@ class Activity(db.Model, SerializerMixin):
             'id': self.id,
             'name': self.name,
             'description': self.description,
-            # 'trip_id': self.trip_id,
-            'destination_id':self.destination_id
+            'destination_id':self.destination_id,
+            'order': self.order
         }

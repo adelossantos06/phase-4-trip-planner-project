@@ -189,10 +189,10 @@ class ActivitiesByDestination(Resource):
         if not destination:
             return make_response({'error': 'Destination not found'}, 404)
 
-        activities = [
-            activity.to_dict() for activity in destination.activities
-        ]
-        return make_response(activities, 200)
+        activities = Activity.query.filter_by(destination_id=destination_id).order_by(Activity.order).all()
+        activities_dict = [activity.to_dict() for activity in activities]
+        
+        return make_response(activities_dict, 200)
     
     def post(self, destination_id):
         destination = Destination.query.get(destination_id)
@@ -202,7 +202,7 @@ class ActivitiesByDestination(Resource):
         params = request.json
         name = params.get('name')
         description = params.get('description')
-        # trip_id = params.get('trip_id')
+        
 
         if not name:
             return make_response({'error': 'Name required'}, 400)
@@ -214,6 +214,29 @@ class ActivitiesByDestination(Resource):
         return make_response(activity.to_dict(), 201)
 
 api.add_resource(ActivitiesByDestination, '/destinations/<int:destination_id>/activities')
+
+class ReorderActivities(Resource):
+    def patch(self, destination_id):
+        data = request.json
+        activity_order = data.get('activities')
+
+        if not activity_order:
+            return make_response({'error': 'Invalid input data'}, 400)
+
+        try:
+            for index, activity_data in enumerate(activity_order):
+                activity = Activity.query.get(activity_data['id'])
+                if activity and activity.destination_id == destination_id:
+                    activity.order = index
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return make_response({'error': str(e)}, 500)
+
+        return make_response({'message': 'Activities reordered successfully'}, 200)
+
+api.add_resource(ReorderActivities, '/destinations/<int:destination_id>/activities/reorder')
+
 
 
 class ActivityResource(Resource):
